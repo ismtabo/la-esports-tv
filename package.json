@@ -1,0 +1,38 @@
+{
+  "name": "la-esports-tv",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^4.28.0",
+    "@telefonica/living-apps-core-react": "^0.40.1",
+    "@twurple/api": "^6.0.9",
+    "@twurple/auth": "^6.0.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.9.0",
+    "react-twitch-embed": "^3.0.1"
+  },
+  "devDependencies": {
+    "@telefonica/living-apps-core-web-types": "^0.12.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "crypto-js": "^4.1.1",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "node-fetch": "^3.3.1",
+    "prettier": "^2.8.6",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}
