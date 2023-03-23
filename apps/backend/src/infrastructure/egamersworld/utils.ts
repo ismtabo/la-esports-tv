@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
+import { Buffer } from "buffer";
 import CryptoJS from "crypto-js";
-
-export const MAIN_URI = "https://egamersworld.com";
+import { API_URI, MAIN_URI } from "./config";
 
 export const createToken = (url = "", mainUri = "") => {
   const uri = url.replace(mainUri, "").split("?")[0];
@@ -12,18 +12,14 @@ export const createToken = (url = "", mainUri = "") => {
   // eslint-disable-next-line new-cap
   const token = CryptoJS.MD5(end + base64data + start);
 
-  return token;
+  return token.toString();
 };
 
-fetch("https://api.egamersworld.com/matches?lang=en", {
-  headers: {
-    referer: "https://egamersworld.com/",
-    "X-CustomHeader": createToken(
-      "https://egamersworld.com/matches?lang=en",
-      MAIN_URI
-    ),
-  },
-})
-  .then((res) => res.json())
-  .then((res) => console.log(JSON.stringify(res)))
-  .catch(console.error);
+export const doGetEGamersWorld = <T = unknown>(path: string): Promise<T> => {
+  return fetch(`${API_URI + path}?lang=en`, {
+    headers: {
+      referer: MAIN_URI,
+      "X-CustomHeader": createToken(`${MAIN_URI + path}?lang=en`, MAIN_URI),
+    },
+  }).then((res) => res.json());
+};

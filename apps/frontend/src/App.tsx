@@ -1,19 +1,22 @@
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
+  useQuery
 } from "@tanstack/react-query";
-import { DynamicRow, FixedItem } from "@telefonica/living-apps-core-react";
 import { HelixGame } from "@twurple/api/lib";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import {
   createBrowserRouter,
   Link,
   RouterProvider,
-  useParams,
+  useParams
 } from "react-router-dom";
 import { TwitchPlayer } from "react-twitch-embed";
-import { apiClient } from "./api/twitch/api";
+import { getStreams } from "./api/backend";
+import {
+  getGameById,
+  getGameStreamsByGameId as getGameStreams, getUserStreamsByUserId
+} from "./api/twitch";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -42,6 +45,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  useEffect(() => {
+    getStreams().then((res) => console.dir(res));
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
@@ -51,8 +57,8 @@ function App() {
 
 function Games() {
   const { isLoading, error, data } = useQuery({
-    queryKey: ["games"],
-    queryFn: () => apiClient.games.getTopGames().then((resp) => resp.data),
+    queryKey: ["streams"],
+    queryFn: () => getStreams(),
   });
   if (isLoading) return <>Loading...</>;
   if (error) return <>{JSON.stringify(error)}</>;
@@ -60,9 +66,9 @@ function Games() {
     <main>
       <article>
         <ul>
-          {data?.map((game) => (
-            <li key={game.id}>
-              <Link to={`/game/${game.id}`}>{game.name}</Link>
+          {data?.map((stream: any) => (
+            <li key={stream.id}>
+              <Link to={`/stream/${stream.id}`}>{stream.display_name}</Link>
             </li>
           ))}
         </ul>
@@ -86,7 +92,7 @@ function Game() {
   const { id } = useParams<{ id: string }>();
   const { isLoading, error, data } = useQuery({
     queryKey: ["games", id],
-    queryFn: () => apiClient.games.getGameById(id!),
+    queryFn: () => getGameById(id!),
   });
   if (isLoading) return <>Loading...</>;
   if (error || !data) return <>{JSON.stringify(error)}</>;
@@ -101,7 +107,7 @@ function Game() {
 function Streams({ game }: { game: HelixGame }) {
   const { isLoading, error, data } = useQuery({
     queryKey: ["games", game.id, "streams"],
-    queryFn: () => game.getStreams().then((resp) => resp.data),
+    queryFn: () => getGameStreams(game),
   });
   if (isLoading) return <>Loading...</>;
   if (error) return <>{JSON.stringify(error)}</>;
@@ -125,8 +131,7 @@ function Stream() {
   const { id } = useParams<{ id: string }>();
   const { isLoading, error, data } = useQuery({
     queryKey: ["stream", id],
-    queryFn: () =>
-      apiClient.streams.getStreamByUserId(id!).then((resp) => resp),
+    queryFn: () => getUserStreamsByUserId(id!),
   });
   if (isLoading) return <>Loading...</>;
   if (error || !data) return <>{JSON.stringify(error)}</>;
