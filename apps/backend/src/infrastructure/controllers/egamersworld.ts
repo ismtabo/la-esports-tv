@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { doGetEGamersWorld } from "../egamersworld";
+import { proxyGetRequest } from "../../context/egamersworld";
 
 const router = Router();
 
 router.get<Array<string>>("/*", async (req, res) => {
-  const path = req.params[0];
-  const result = await doGetEGamersWorld(`/${path}`);
+  const result = await proxyGetRequest(req.params[0]);
   res.json(result);
 });
 
