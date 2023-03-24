@@ -3,6 +3,7 @@ import express from "express";
 import ViteExpress from "vite-express";
 import egamersworld from "./infrastructure/controllers/egamersworld";
 import streams from "./infrastructure/controllers/streams";
+import home from "./infrastructure/controllers/home";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/hello", (_, res) => {
 
 app.use("/egamersworld", egamersworld);
 app.use("/streams", streams);
+app.use("/home", home);
 
 ViteExpress.listen(app, 3000, () =>
   console.log("Server is listening on port 3000...")
