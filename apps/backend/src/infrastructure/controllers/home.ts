@@ -39,9 +39,6 @@ router.get("/", async (_req, res) => {
     .mapValues(pipe(flatMap("streams"), map("parameter"), first))
     .value();
   const groupedTeamLiveStreams = merge(teamALiveStreams, teamBLiveStreams);
-  console.log(
-    JSON.stringify({ teams, teamLiveStreams: groupedTeamLiveStreams })
-  );
   const leaguesWithStreams = leagues.map((league) => {
     const streamLogin = groupedLiveStreams[league.id];
     const stream = twitchStreams[streamLogin];
